@@ -299,7 +299,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     private PointF mWakeUpTouchLocation;
     private boolean mScreenTurningOn;
 
-    private int mNightMode;
+    private int mUiMode;
 
     int mPixelFormat;
     Object mQueueLock = new Object();
@@ -417,15 +417,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     mHeadsUpManager.releaseAllImmediately();
                 }
             }
-        }
-    };
-
-    private final ContentObserver mThemeObserver = new ContentObserver(mHandler) {
-        @Override
-        public void onChange(boolean selfChange) {
-            mNightMode = Settings.Secure.getInt(mContext.getContentResolver(),
-                    Settings.Secure.UI_NIGHT_MODE, UiModeManager.MODE_NIGHT_NO);
-            recreateStatusBar();
         }
     };
 
@@ -679,11 +670,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         notifyUserAboutHiddenNotifications();
 
         mScreenPinningRequest = new ScreenPinningRequest(mContext);
-
-        // Night Mode
-        mThemeObserver.onChange(true);
-        mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor(
-                Settings.Secure.UI_NIGHT_MODE), true, mThemeObserver);
     }
 
     // ================================================================================
@@ -3081,6 +3067,11 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mIconController.updateResources();
         mScreenPinningRequest.onConfigurationChanged();
         mNetworkController.onConfigurationChanged();
+
+        if (mUiMode != newConfig.uiMode) {
+            mUiMode = newConfig.uiMode;
+            recreateStatusBar();
+        }
     }
 
     @Override
