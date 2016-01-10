@@ -74,7 +74,7 @@ public class ActivityTrigger
             acInfo.flags |= ActivityInfo.FLAG_HARDWARE_ACCELERATED;
         }
         if((overrideFlags & FLAG_OVERRIDE_RESOLUTION) != 0) {
-            appInfo.setOverrideRes(1);
+            //appInfo.setOverrideRes(1);
         }
     }
 
